@@ -16,31 +16,31 @@ account_sid = '#'
 auth_token = '#'
 client = Client(account_sid, auth_token)
 
-DIALOGFLOW_PROJECT_ID = '#'
-DIALOGFLOW_LANGUAGE_CODE = 'en-US'
-GOOGLE_APPLICATION_CREDENTIALS = 'C:\\Users\\natha\\Documents\\TinderAPI\\Tinder\\#.json'
+dialogflowProjectId = '#'
+dialogflowLanguageCode = 'en-US'
+googleAppCred = 'C:\\Users\\andykim\\Documents\\TinderAPI\\Tinder\\#.json'
 
 	
-credential_path = "C:\\Users\\natha\\Documents\\TinderAPI\\Tinder\\#.json"
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+credential_path = "C:\\Users\\andykim\\Documents\\TinderAPI\\Tinder\\#.json"
+os.environ['googleAppCred'] = credential_path
 
 
 
-def MLtext(id, message):
-	text_to_be_analyzed = message;
+def dialogText(id, message):
+	text_to_analyze = message;
 
 	session_client = dialogflow.SessionsClient()
-	session = session_client.session_path(DIALOGFLOW_PROJECT_ID, id)
+	session = session_client.session_path(dialogflowProjectId, id)
 
-	text_input = dialogflow.types.TextInput(text=text_to_be_analyzed, language_code=DIALOGFLOW_LANGUAGE_CODE)
-	query_input = dialogflow.types.QueryInput(text=text_input)
+	textInput = dialogflow.types.TextInput(text=text_to_analyze, language_code=dialogflowLanguageCode)
+	query_input = dialogflow.types.QueryInput(text=textInput)
 	try:
 	    response = session_client.detect_intent(session=session, query_input=query_input)
 	except InvalidArgument:
 	    raise
 	print("Query text:", response.query_result.query_text)
 	print("Detected intent:", response.query_result.intent.display_name)
-	print("Detected intent confidence:", response.query_result.intent_detection_confidence)
+	print("Detected confidence:", response.query_result.intent_detection_confidence)
 	print("Fulfillment text:", response.query_result.fulfillment_text)
 	print("\n");
 
@@ -49,7 +49,7 @@ def MLtext(id, message):
 def twilioMsg(name, pic, message, id):
 	message = client.messages \
                 .create(
-                     body = "After talking with \'you\' for a bit, " + name + " " + message + "\n \n if you might want to hangout, check out the interaction on tinder! \n \n if not, please reply with the ID of the person. \n \n ID: " + id,
+                     body = "After talking with \'you\' for a bit, " + name + " " + message + "\n \n if you want to hangout, check your tinder! \n \n if not, please reply to this with the ID. \n \n ID: " + id,
                      from_='+14082157063',
                      media_url = pic,
                      to = '+14088911891'
@@ -78,7 +78,7 @@ def automated_replies():
 			lastMessage = user['messages'][-1];
 			if lastMessage['from'] != selfId:
 				message = lastMessage['message'];
-				reply = MLtext(userId,message);
+				reply = dialogText(userId,message);
 				reply = reply.lower();
 				print(reply)
 				if "hangout with you" in reply:
@@ -111,7 +111,7 @@ def replymessages_ex():
 			lastMessage = user['messages'][-1];
 			if lastMessage['from'] != selfId:
 				message = lastMessage['message'];
-				reply = MLtext(userId, message).lower();
+				reply = dialogText(userId, message).lower();
 
 				print(reply)
 				if reply:
