@@ -9,7 +9,7 @@ client = Client(account_sid, auth_token)
 
 message = client.messages \
                 .create(
-                     body="Ben Dover and Moe Lester need to talk to you.",
+                     body="Karen needs to talk to you.",
                      from_='+14082157063',
                      to='+#'
                  )
